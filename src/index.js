@@ -1,5 +1,5 @@
 // Task 1
-var str_reverse = require('./str_reverse');
+import str_reverse from './str_reverse';
 
 var reversed1 = str_reverse('123456 78');
 console.log(reversed1);
@@ -8,8 +8,8 @@ var reversed2 = str_reverse('test data');
 console.log(reversed2);
 
 // Task 2
-var fs = require('fs');
-var convertor = require('./csv-to-json');
+import fs from 'fs';
+import { convertCSVtoJSON, convertCSVtoJSONStream } from './csv-to-json';
 
 var csvFilePath = __dirname + '/csv/example.csv';
 var convertedFilesDir = __dirname + '/converted';
@@ -22,8 +22,7 @@ if (!fs.existsSync(convertedFilesDir)) {
 }
 
 // First Example
-convertor
-  .convertCSVtoJSON(csvFilePath, jsonFilePath)
+convertCSVtoJSON(csvFilePath, jsonFilePath)
   .then(function(res) {
     console.log(res);
   })
@@ -32,8 +31,7 @@ convertor
   });
 
 // Second Example
-convertor
-  .convertCSVtoJSONStream(csvFilePath, streamJsonFilePath)
+convertCSVtoJSONStream(csvFilePath, streamJsonFilePath)
   .then(function(res) {
     console.log(res);
   })

@@ -1,8 +1,7 @@
-function str_reverse(str) {
-  return str
+const str_reverse = str =>
+  str
     .split('')
     .reverse()
     .join('');
-}
 
-module.exports = str_reverse;
+export default str_reverse;
