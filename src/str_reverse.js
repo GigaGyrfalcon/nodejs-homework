@@ -1,7 +1,21 @@
-const str_reverse = str =>
+import readline from 'readline';
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+const strReverse = str =>
   str
     .split('')
     .reverse()
     .join('');
 
-export default str_reverse;
+const askForInput = () => {
+  rl.question('Enter string: ', value => {
+    console.log('String reversed: ' + strReverse(value));
+    askForInput();
+  });
+};
+
+askForInput();
