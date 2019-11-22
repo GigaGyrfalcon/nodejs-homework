@@ -13,20 +13,18 @@ if (!fs.existsSync(convertedFilesDir)) {
   fs.mkdirSync(convertedFilesDir);
 }
 
-// First Example
-convertCSVtoJSON(csvFilePath, jsonFilePath)
-  .then(function(res) {
-    console.log(res);
-  })
-  .catch(function(err) {
-    console.error(err);
-  });
+const init = async () => {
+  try {
+    // First Example
+    const res1 = await convertCSVtoJSON(csvFilePath, jsonFilePath);
+    console.log(res1);
 
-// Second Example
-convertCSVtoJSONStream(csvFilePath, streamJsonFilePath)
-  .then(function(res) {
-    console.log(res);
-  })
-  .catch(function(err) {
-    console.error(err);
-  });
+    // Second Example
+    const res2 = await convertCSVtoJSONStream(csvFilePath, streamJsonFilePath);
+    console.log(res2);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+init();
