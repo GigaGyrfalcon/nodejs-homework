@@ -1,9 +1,7 @@
 import { Sequelize } from 'sequelize';
 
 export const sequelize: Sequelize = new Sequelize(
-  'db',
-  'postgres',
-  '1234qwer',
+  'postgres://omvevehy:ITicWjTA-puPNLT7DbtS3uume2bJbWXb@balarama.db.elephantsql.com:5432/omvevehy',
   {
     host: 'localhost',
     dialect: 'postgres',
