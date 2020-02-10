@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export function schema(required: boolean): Joi.ObjectSchema {
+export function userSchema(required: boolean): Joi.ObjectSchema {
   return Joi.object().keys({
     login: required
       ? Joi.string()

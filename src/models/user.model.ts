@@ -1,5 +1,6 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Association } from 'sequelize';
 import { sequelize } from '../data-access/db';
+import { Group } from '.';
 
 export class User extends Model {
   public id!: number;
@@ -8,9 +9,11 @@ export class User extends Model {
   public age!: number;
   public isDeleted!: boolean;
 
-  // timestamps!
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public readonly groups?: Group[];
+
+  public static associations: {
+    groups: Association<User, Group>;
+  };
 }
 
 User.init(
@@ -35,6 +38,7 @@ User.init(
   },
   {
     tableName: 'users',
-    sequelize: sequelize
+    sequelize: sequelize,
+    timestamps: false
   }
 );

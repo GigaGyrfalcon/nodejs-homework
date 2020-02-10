@@ -1,5 +1,5 @@
 import { UserInterface, QueryInterface } from '../interfaces';
-import * as service from '../services/user.service';
+import * as service from '../services';
 
 export function getUsers(query: QueryInterface) {
   return service.getUsers(query);
@@ -19,4 +19,8 @@ export function updateUser(id: number, body: UserInterface) {
 
 export function deleteUser(id: number) {
   return service.deleteUser(id);
+}
+
+export function addUsersToGroup(groupId: string, userIds: number[]) {
+  return service.addUsersToGroup(groupId, userIds);
 }
