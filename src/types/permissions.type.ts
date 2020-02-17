@@ -1,1 +1,7 @@
-export type Permissions = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILE';
+export enum Permissions {
+  Read = 'READ',
+  Write = 'WRITE',
+  Delete = 'DELETE',
+  Share = 'SHARE',
+  Upload_file = 'UPLOAD_FILE'
+}
