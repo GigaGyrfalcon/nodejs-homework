@@ -4,6 +4,7 @@ import { sequelize } from './data-access/db';
 import { userRouter, groupRouter } from './routers';
 import { USERS as _USERS, GROUPS as _GROUPS } from './data-access/seed';
 import { User, Group, UserGroup } from './models';
+import { logger } from './utils/logger';
 
 const app: express.Application = express();
 const port: number = 3000;
@@ -12,12 +13,45 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
+app.use((req: express.Request, _, next: express.NextFunction) => {
+  console.log({
+    method: req.method,
+    arguments: { ...req.params, ...req.query, ...req.body }
+  });
+  next();
+});
+
+app.use((req, res, next) => {
+  const start: any = new Date();
+  res.on('close', () => {
+    const close: any = new Date();
+    const executionTime: any = close - start;
+    console.log(
+      `${req.method} ${req.originalUrl} execution time: ${executionTime}ms`
+    );
+  });
+
+  next();
+});
+
 app.get('/', (_, res: express.Response) => {
   res.send('Welcome to hell!');
 });
 
 app.use('/api/users', userRouter);
 app.use('/api/groups', groupRouter);
+
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    logger.error(err.stack || '');
+    res.status(500).send('Something broke!');
+  }
+);
 
 (async () => {
   try {
@@ -79,3 +113,12 @@ app.use('/api/groups', groupRouter);
 app.listen(port, function() {
   console.log(`App listening on port ${port}!`);
 });
+
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, 'Unhandled Rejection at Promise', p);
+  })
+  .on('uncaughtException', err => {
+    console.error(err, 'Uncaught Exception thrown');
+    process.exit(1);
+  });
