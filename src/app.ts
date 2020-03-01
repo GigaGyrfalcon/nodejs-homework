@@ -19,73 +19,62 @@ app.get('/', (_, res: express.Response) => {
 app.use('/api/users', userRouter);
 app.use('/api/groups', groupRouter);
 
-sequelize
-  .sync({
-    logging: console.log,
-    force: true
-  })
-  .then(async () => {
-    try {
-      await User.bulkCreate(_USERS);
-      await Group.bulkCreate(_GROUPS);
-      console.log('Seed users and groups added successfully');
-    } catch (error) {
-      console.log(`Error during inserting data ${error}`);
-    }
-  })
-  .then(async () => {
-    try {
-      await User.belongsToMany(Group, {
-        as: 'Group',
-        through: 'UserGroup',
-        foreignKey: 'userId'
-      });
-      await Group.belongsToMany(User, {
-        as: 'User',
-        through: 'UserGroup',
-        foreignKey: 'groupId'
-      });
-      await User.hasMany(UserGroup, {
-        sourceKey: 'id',
-        foreignKey: 'userId',
-        as: 'groups'
-      });
-      await Group.hasMany(UserGroup, {
-        sourceKey: 'id',
-        foreignKey: 'groupId',
-        as: 'users'
-      });
+(async () => {
+  try {
+    await sequelize.sync({
+      logging: console.log,
+      force: true
+    });
+    await User.bulkCreate(_USERS);
+    await Group.bulkCreate(_GROUPS);
 
-      const user = await User.create({
-        login: 'King',
-        password: '12345678',
-        age: 55,
-        isDeleted: false
-      });
+    User.belongsToMany(Group, {
+      as: 'Group',
+      through: 'UserGroup',
+      foreignKey: 'userId'
+    });
+    Group.belongsToMany(User, {
+      as: 'User',
+      through: 'UserGroup',
+      foreignKey: 'groupId'
+    });
+    User.hasMany(UserGroup, {
+      sourceKey: 'id',
+      foreignKey: 'userId',
+      as: 'groups'
+    });
+    Group.hasMany(UserGroup, {
+      sourceKey: 'id',
+      foreignKey: 'groupId',
+      as: 'users'
+    });
 
-      const user2 = await User.create({
-        login: 'Queen',
-        password: '87654321',
-        age: 46,
-        isDeleted: false
-      });
-      const group = await Group.create({
-        name: 'Puppet',
-        permissions: ['READ']
-      });
+    const user = await User.create({
+      login: 'King',
+      password: '12345678',
+      age: 55,
+      isDeleted: false
+    });
 
-      await UserGroup.create({ userId: user.id, groupId: group.id });
-      await UserGroup.create({ userId: user2.id, groupId: group.id });
-    } catch (err) {
-      console.error('Error during inserting user group:', err);
-    }
-  })
-  .then(() => {
+    const user2 = await User.create({
+      login: 'Queen',
+      password: '87654321',
+      age: 46,
+      isDeleted: false
+    });
+    const group = await Group.create({
+      name: 'Puppet',
+      permissions: ['READ']
+    });
+
+    await UserGroup.create({ userId: user.id, groupId: group.id });
+    await UserGroup.create({ userId: user2.id, groupId: group.id });
+
     console.log('Connection has been established successfully.');
-  })
-  .catch((err: any) => {
-    console.error('Unable to connect to the database:', err);
-  });
+  } catch (err) {
+    console.error(err);
+  }
+})();
 
 app.listen(port, function() {
   console.log(`App listening on port ${port}!`);

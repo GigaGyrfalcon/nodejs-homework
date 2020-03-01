@@ -1,26 +1,95 @@
-import { UserInterface, QueryInterface } from '../interfaces';
-import * as service from '../services';
+import express from 'express';
+import Joi from 'joi';
+import * as service from '../services/user.service';
+import { UserInterface } from '../interfaces';
+import { userSchema } from '../schemas';
 
-export function getUsers(query: QueryInterface) {
-  return service.getUsers(query);
+export function getUsers(req: express.Request, res: express.Response) {
+  (async () => {
+    try {
+      const result = await service.getUsers(req.query);
+      res.json(result);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  })();
 }
 
-export function getUserByPk(id: number) {
-  return service.getUserByPk(id);
+export function getUserByPk(req: express.Request, res: express.Response) {
+  (async () => {
+    try {
+      const id = +req.params.id;
+      const result = await service.getUserByPk(id);
+      res.json(result);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  })();
 }
 
-export function addUser(body: UserInterface) {
-  return service.addUser(body);
+export function addUser(req: express.Request, res: express.Response) {
+  (async () => {
+    try {
+      const validation = Joi.validate(req.body, userSchema(true));
+      const valid = validation.error === null;
+      if (valid) {
+        const result = await service.addUser(req.body);
+        res.json(result);
+      } else {
+        res.status(400).json({ error: validation.error });
+      }
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  })();
 }
 
-export function updateUser(id: number, body: UserInterface) {
-  return service.updateUser(id, body);
+export function updateUser(req: express.Request, res: express.Response) {
+  (async () => {
+    try {
+      const body: UserInterface = {
+        login: req.body.login,
+        password: req.body.password,
+        age: req.body.age
+      };
+      const validation = Joi.validate(body, userSchema(false));
+      const valid = validation.error === null;
+      if (valid) {
+        const id = +req.params.id;
+        const result = await service.updateUser(id, body);
+        res.json(result);
+      } else {
+        res.status(400).json({ message: validation.error.message });
+      }
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  })();
 }
 
-export function deleteUser(id: number) {
-  return service.deleteUser(id);
+export function deleteUser(req: express.Request, res: express.Response) {
+  (async () => {
+    try {
+      const id = +req.params.id;
+      const result = await service.deleteUser(id);
+      res.json(result);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  })();
 }
 
-export function addUsersToGroup(groupId: string, userIds: number[]) {
-  return service.addUsersToGroup(groupId, userIds);
+export function addUsersToGroup(req: express.Request, res: express.Response) {
+  (async () => {
+    try {
+      const body = {
+        groupId: req.body.groupId as string,
+        userIds: req.body.userIds as number[]
+      };
+      const result = await service.addUsersToGroup(body.groupId, body.userIds);
+      res.json(result);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  })();
 }
