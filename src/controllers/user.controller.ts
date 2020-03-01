@@ -1,10 +1,10 @@
-import express from 'express';
+import { Request, Response } from 'express';
 import Joi from 'joi';
 import * as service from '../services/user.service';
 import { UserInterface } from '../interfaces';
 import { userSchema } from '../schemas';
 
-export function getUsers(req: express.Request, res: express.Response) {
+export function getUsers(req: Request, res: Response) {
   (async () => {
     try {
       const result = await service.getUsers(req.query);
@@ -20,7 +20,7 @@ export function getUsers(req: express.Request, res: express.Response) {
   })();
 }
 
-export function getUserByPk(req: express.Request, res: express.Response) {
+export function getUserByPk(req: Request, res: Response) {
   (async () => {
     try {
       const id = +req.params.id;
@@ -40,7 +40,7 @@ export function getUserByPk(req: express.Request, res: express.Response) {
   })();
 }
 
-export function addUser(req: express.Request, res: express.Response) {
+export function addUser(req: Request, res: Response) {
   (async () => {
     try {
       const validation = Joi.validate(req.body, userSchema(true));
@@ -62,7 +62,7 @@ export function addUser(req: express.Request, res: express.Response) {
   })();
 }
 
-export function updateUser(req: express.Request, res: express.Response) {
+export function updateUser(req: Request, res: Response) {
   (async () => {
     try {
       const body: UserInterface = {
@@ -90,7 +90,7 @@ export function updateUser(req: express.Request, res: express.Response) {
   })();
 }
 
-export function deleteUser(req: express.Request, res: express.Response) {
+export function deleteUser(req: Request, res: Response) {
   (async () => {
     try {
       const id = +req.params.id;
@@ -107,7 +107,7 @@ export function deleteUser(req: express.Request, res: express.Response) {
   })();
 }
 
-export function addUsersToGroup(req: express.Request, res: express.Response) {
+export function addUsersToGroup(req: Request, res: Response) {
   (async () => {
     try {
       const body = {

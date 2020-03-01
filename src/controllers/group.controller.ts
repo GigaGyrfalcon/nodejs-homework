@@ -1,10 +1,10 @@
-import express from 'express';
+import { Request, Response } from 'express';
 import Joi from 'joi';
 import * as service from '../services/group.service';
 import { GroupInterface } from '../interfaces';
 import { groupSchema } from '../schemas';
 
-export function getGroupByPk(req: express.Request, res: express.Response) {
+export function getGroupByPk(req: Request, res: Response) {
   (async () => {
     try {
       const id = req.params.id;
@@ -24,7 +24,7 @@ export function getGroupByPk(req: express.Request, res: express.Response) {
   })();
 }
 
-export function getGroups(req: express.Request, res: express.Response) {
+export function getGroups(req: Request, res: Response) {
   (async () => {
     try {
       const result = await service.getGroups();
@@ -40,7 +40,7 @@ export function getGroups(req: express.Request, res: express.Response) {
   })();
 }
 
-export function addGroup(req: express.Request, res: express.Response) {
+export function addGroup(req: Request, res: Response) {
   (async () => {
     try {
       const validation = Joi.validate(req.body, groupSchema(true));
@@ -62,7 +62,7 @@ export function addGroup(req: express.Request, res: express.Response) {
   })();
 }
 
-export function updateGroup(req: express.Request, res: express.Response) {
+export function updateGroup(req: Request, res: Response) {
   (async () => {
     try {
       const body: GroupInterface = {
@@ -89,7 +89,7 @@ export function updateGroup(req: express.Request, res: express.Response) {
   })();
 }
 
-export function deleteGroup(req: express.Request, res: express.Response) {
+export function deleteGroup(req: Request, res: Response) {
   (async () => {
     try {
       const id = req.params.id;
