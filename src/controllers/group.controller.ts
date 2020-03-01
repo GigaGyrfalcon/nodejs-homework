@@ -9,8 +9,16 @@ export function getGroupByPk(req: express.Request, res: express.Response) {
     try {
       const id = req.params.id;
       const result = await service.getGroupByPk(id);
+      if (!result) {
+        throw 'Group could not found';
+      }
       res.json(result);
     } catch (error) {
+      console.error({
+        method: req.method,
+        arguments: { ...req.params, ...req.query, ...req.body },
+        error
+      });
       res.status(400).json(error);
     }
   })();
@@ -22,6 +30,11 @@ export function getGroups(req: express.Request, res: express.Response) {
       const result = await service.getGroups();
       res.json(result);
     } catch (error) {
+      console.error({
+        method: req.method,
+        arguments: { Params: req.params, Query: req.query },
+        error
+      });
       res.status(400).json(error);
     }
   })();
@@ -36,9 +49,14 @@ export function addGroup(req: express.Request, res: express.Response) {
         const result = await service.addGroup(req.body);
         res.json(result);
       } else {
-        res.status(400).json({ error: validation.error });
+        throw validation.error;
       }
     } catch (error) {
+      console.error({
+        method: req.method,
+        arguments: { ...req.params, ...req.query, ...req.body },
+        error
+      });
       res.status(400).json(error);
     }
   })();
@@ -58,9 +76,14 @@ export function updateGroup(req: express.Request, res: express.Response) {
         const result = await service.updateGroup(id, body);
         res.json(result);
       } else {
-        res.status(400).json({ message: validation.error.message });
+        throw validation.error;
       }
     } catch (error) {
+      console.error({
+        method: req.method,
+        arguments: { ...req.params, ...req.query, ...req.body },
+        error
+      });
       res.status(400).json(error);
     }
   })();
@@ -73,6 +96,11 @@ export function deleteGroup(req: express.Request, res: express.Response) {
       const result = await service.deleteGroup(id);
       res.json(result);
     } catch (error) {
+      console.error({
+        method: req.method,
+        arguments: { ...req.params, ...req.query, ...req.body },
+        error
+      });
       res.status(400).json(error);
     }
   })();
