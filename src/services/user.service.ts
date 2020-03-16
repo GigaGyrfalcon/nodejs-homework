@@ -27,6 +27,16 @@ export async function getUserByPk(id: number) {
   return await User.findByPk(id);
 }
 
+export async function getUserByLogin(login: string) {
+  return await User.findOne({
+    attributes: ['id', 'login', 'password'],
+    where: {
+      login: login
+    },
+    raw: true
+  });
+}
+
 export async function addUser(body: UserInterface) {
   const newUser: UserInterface = { ...body, isDeleted: false };
   return await User.create(newUser);
