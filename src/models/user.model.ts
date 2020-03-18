@@ -1,4 +1,5 @@
 import { Model, DataTypes, Association } from 'sequelize';
+import { hashSync } from 'bcrypt';
 import { sequelize } from '../data-access/db';
 import { Group } from '.';
 
@@ -27,6 +28,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     age: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -37,6 +42,16 @@ User.init(
     }
   },
   {
+    hooks: {
+      beforeBulkCreate(users) {
+        for (const user of users) {
+          user.password = hashSync(user.password, 10);
+        }
+      },
+      beforeCreate(user) {
+        user.password = hashSync(user.password, 10);
+      }
+    },
     tableName: 'users',
     sequelize: sequelize,
     timestamps: false
