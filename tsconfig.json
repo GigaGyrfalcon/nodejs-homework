@@ -4,7 +4,7 @@
     "module": "commonjs",
     "outDir": "./build",
     "strict": true,
-    "types": ["node", "express"],
+    "types": ["node", "express", "jest"],
     "removeComments": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
